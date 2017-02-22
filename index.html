@@ -17,13 +17,13 @@
 
 
 <div class="sortable_content">
-    <ul class="sortable_list">
-        <li class="sortable_list_item" id="sortableli_1" tabIndex="1">Item 1</li>
-        <li class="sortable_list_item" id="sortableli_2" tabIndex="1">Item 2</li>
-        <li class="sortable_list_item" id="sortableli_3" tabIndex="1">Item 3</li>
-        <li class="sortable_list_item" id="sortableli_4" tabIndex="1">Item 4</li>
-        <li class="sortable_list_item" id="sortableli_5" tabIndex="1">Item 5</li>
-        <li class="sortable_list_item" id="sortableli_6" tabIndex="1">Item 6</li>
+    <ul class="sortable_list" role='itemlist' aria-label="sortable items">
+        <li class="sortable_list_item" id="sortableli_1" tabIndex="1" role="listitem" aria-label="sortable item 1 is in position 1" >Item 1</li>
+        <li class="sortable_list_item" id="sortableli_2" tabIndex="1" role="listitem" aria-label="sortable item 2 is in position 2" >Item 2</li>
+        <li class="sortable_list_item" id="sortableli_3" tabIndex="1" role="listitem" aria-label="sortable item 3 is in position 3" >Item 3</li>
+        <li class="sortable_list_item" id="sortableli_4" tabIndex="1" role="listitem" aria-label="sortable item 4 is in position 4" >Item 4</li>
+        <li class="sortable_list_item" id="sortableli_5" tabIndex="1" role="listitem" aria-label="sortable item 5 is in position 5" >Item 5</li>
+        <li class="sortable_list_item" id="sortableli_6" tabIndex="1" role="listitem" aria-label="sortable item 6 is in position 5" >Item 6</li>
     </ul>
 </div>
 
@@ -42,90 +42,129 @@ $(document).ready(function(){
         bindSortable();
     });
 
-    $( ".sortable_list" ).sortable();
+    $( ".sortable_list" ).sortable({
+
+         stop:function(event,ui){ 
+
+            console.log("sorted");
+            updateItemAriaLabels();
+
+         }
+
+    });
 
 
     function bindSortable(){
 
         $(".sortable_list_item").hover(function(e){
-        console.log("on hover");
-        $(e.target).addClass("hovered");
+            $(e.target).addClass("hovered");
+
+            $(e.target).addClass("ui-selecting");
+            $(e.target).attr("aria-selected", true);
+
+
         }, function(e){
-            console.log("on out");
             $(e.target).removeClass("hovered");
+
+            $(e.target).removeClass("ui-selecting");
+            $(e.target).removeAttr("aria-selected");
         });
 
         $('.sortable_list_item').focus(function() {
             $(this).addClass("ui-selecting");
+            $(this).attr("aria-selected", true);
         }); 
         $('.sortable_list_item').focusout(function() {
-             $(this).removeClass("ui-selecting");
+            $(this).removeClass("ui-selecting");
+            $(this).removeAttr("aria-selected");
         }); 
 
 
         $('.sortable_list_item').bind('keydown', function(event) {
 
-         if(event.which == 38){
-            //up
-            console.log("up");
-
-            var current_original_text = $(this).text();
-            var previous_original_text = $(this).prev().text();
-            var current_original_data = $(this).data();
-            var previous_original_data = $(this).prev().data();
-            var current_original_attr = $(this).attributes();
-            var previous_original_attr = $(this).prev().attributes();
+             if(event.which == 38){
+                //up
+                console.log("up");
+                if($(this).prev().length > 0){
 
 
-            var current = $(this);
-            var previous = $(this).prev();
-
-            current.text(previous_original_text);
-            current.data(previous_original_data);
-            current.attr(previous_original_attr);
-
-            previous.text(current_original_text);
-            previous.data(current_original_data);
-            previous.attr(current_original_attr);
-
-        
-            previous.focus();
-
-         }
-
-         if(event.which == 40){
-            //down
-            console.log("down");
-
-          
-            var current_original_text = $(this).text();
-            var next_original_text = $(this).next().text();
-            var current_original_data = $(this).data();
-            var next_original_data = $(this).next().data();
-            var current_original_attr = $(this).attributes();
-            var next_original_attr = $(this).next().attributes();
+                    var current_original_text = $(this).text();
+                    var previous_original_text = $(this).prev().text();
+                    var current_original_data = $(this).data();
+                    var previous_original_data = $(this).prev().data();
+                    var current_original_attr = $(this).attributes();
+                    var previous_original_attr = $(this).prev().attributes();
 
 
-            var current = $(this);
-            var next = $(this).next();
+                    var current = $(this);
+                    var previous = $(this).prev();
 
-            current.text(next_original_text);
-            current.data(next_original_data);
-            current.attr(next_original_attr);
+                    current.text(previous_original_text);
+                    current.data(previous_original_data);
+                    current.attr(previous_original_attr);
 
-            next.text(current_original_text);
-            next.data(current_original_data);
-            next.attr(current_original_attr);
+                    previous.text(current_original_text);
+                    previous.data(current_original_data);
+                    previous.attr(current_original_attr);
 
-        
-            next.focus(); 
-            
-         }
+                
+                    previous.focus();
+                    updateItemAriaLabels();
+                }
+
+             }
+
+             if(event.which == 40){
+                //down
+                console.log("down");
+
+                if($(this).next().length > 0){
+
+                    var current_original_text = $(this).text();
+                    var next_original_text = $(this).next().text();
+                    var current_original_data = $(this).data();
+                    var next_original_data = $(this).next().data();
+                    var current_original_attr = $(this).attributes();
+                    var next_original_attr = $(this).next().attributes();
 
 
-            
+                    var current = $(this);
+                    var next = $(this).next();
+
+                    current.text(next_original_text);
+                    current.data(next_original_data);
+                    current.attr(next_original_attr);
+
+                    next.text(current_original_text);
+                    next.data(current_original_data);
+                    next.attr(current_original_attr);
+
+                
+                    next.focus(); 
+                    updateItemAriaLabels();
+                }
+             }
+                      
         });
+
+        
+
     }
+
+function updateItemAriaLabels(){
+            
+
+            $(".sortable_list_item").each(function(ind, obj){
+
+                var label = "Sortable item: "+$(obj).text()+" is in position "+(ind+1);
+
+                $(obj).attr("aria-label", label);
+
+            });
+
+
+        }
+
 
 (function(old) {
   $.fn.attributes = function() {
