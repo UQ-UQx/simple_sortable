@@ -11,31 +11,176 @@
       console.log("JQUERY-UI VERSION: "+$.ui.version);
       console.log("Underscore VERSION: "+_.VERSION);
     </script>
-
-
 </head>
 <body>
 
 
 
+<div class="sortable_content">
+    <ul class="sortable_list">
+        <li class="sortable_list_item" id="sortableli_1" tabIndex="1">Item 1</li>
+        <li class="sortable_list_item" id="sortableli_2" tabIndex="1">Item 2</li>
+        <li class="sortable_list_item" id="sortableli_3" tabIndex="1">Item 3</li>
+        <li class="sortable_list_item" id="sortableli_4" tabIndex="1">Item 4</li>
+        <li class="sortable_list_item" id="sortableli_5" tabIndex="1">Item 5</li>
+        <li class="sortable_list_item" id="sortableli_6" tabIndex="1">Item 6</li>
+    </ul>
+</div>
+
+<button class="reset_button" role="reset list">Reset</button>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
 
+    var sortable_cache = $(".sortable_list").html();
+    bindSortable();
+    
+
+    $(".reset_button").on("click.reset", function(e){
+        $(".sortable_list").html(sortable_cache).sortable("refresh");
+        bindSortable();
+    });
+
+    $( ".sortable_list" ).sortable();
 
 
+    function bindSortable(){
+
+        $(".sortable_list_item").hover(function(e){
+        console.log("on hover");
+        $(e.target).addClass("hovered");
+        }, function(e){
+            console.log("on out");
+            $(e.target).removeClass("hovered");
+        });
+
+        $('.sortable_list_item').focus(function() {
+            $(this).addClass("ui-selecting");
+        }); 
+        $('.sortable_list_item').focusout(function() {
+             $(this).removeClass("ui-selecting");
+        }); 
 
 
+        $('.sortable_list_item').bind('keydown', function(event) {
+
+         if(event.which == 38){
+            //up
+            console.log("up");
+
+            var current_original_text = $(this).text();
+            var previous_original_text = $(this).prev().text();
+            var current_original_data = $(this).data();
+            var previous_original_data = $(this).prev().data();
+            var current_original_attr = $(this).attributes();
+            var previous_original_attr = $(this).prev().attributes();
 
 
+            var current = $(this);
+            var previous = $(this).prev();
+
+            current.text(previous_original_text);
+            current.data(previous_original_data);
+            current.attr(previous_original_attr);
+
+            previous.text(current_original_text);
+            previous.data(current_original_data);
+            previous.attr(current_original_attr);
+
+        
+            previous.focus();
+
+         }
+
+         if(event.which == 40){
+            //down
+            console.log("down");
+
+          
+            var current_original_text = $(this).text();
+            var next_original_text = $(this).next().text();
+            var current_original_data = $(this).data();
+            var next_original_data = $(this).next().data();
+            var current_original_attr = $(this).attributes();
+            var next_original_attr = $(this).next().attributes();
 
 
+            var current = $(this);
+            var next = $(this).next();
 
+            current.text(next_original_text);
+            current.data(next_original_data);
+            current.attr(next_original_attr);
+
+            next.text(current_original_text);
+            next.data(current_original_data);
+            next.attr(current_original_attr);
+
+        
+            next.focus(); 
+            
+         }
+
+
+            
+        });
+    }
+
+(function(old) {
+  $.fn.attributes = function() {
+    if(arguments.length === 0) {
+      if(this.length === 0) {
+        return null;
+      }
+
+      var obj = {};
+      $.each(this[0].attributes, function() {
+        if(this.specified) {
+          obj[this.name] = this.value;
+        }
+      });
+      return obj;
+    }
+
+    return old.apply(this, arguments);
+  };
+})($.fn.attributes);
 
 
 });// document.ready
+
+
 </script>
+
+<style type="text/css">
+    
+.sortable_list{
+/*     list-style: none;
+ */    list-style-type: none;
+
+    background-color: green;
+    padding: 0;
+    width: 200px;
+    height: auto;
+}
+
+.sortable_list_item{
+    background-color: red;
+    width: 100%;
+    text-align: center;
+    height: 30px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.hovered{
+
+    background-color: lightblue;
+
+}
+
+</style>
 
 </body>
 </html>
