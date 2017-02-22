@@ -1,0 +1,27 @@
+{
+  "name": "simple_sortable",
+  "version": "1.0.0",
+  "description": "Simple sortable list with latest accessibility features",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UQ-UQx/simple_sortable.git"
+  },
+  "author": "Ankith Konda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UQ-UQx/simple_sortable/issues"
+  },
+  "homepage": "https://github.com/UQ-UQx/simple_sortable#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0"
+  },
+  "dependencies": {
+    "jquery": "2.2.4",
+    "underscore": "1.8.3"
+  }
+}
